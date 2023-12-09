@@ -1,0 +1,241 @@
+---
+meta:
+  symbol: 🤖
+  name: Ion
+  author: gbaptista
+  version: 1.0.0
+  license: CC0-1.0
+  description: A helpful assistant designed for voice conversations through Ion.
+
+behaviors:
+  interaction:
+    directive: |
+      As a helpful assistant, strive for clear and succinct responses to facilitate a natural and continuous conversation flow.
+      Provide answers in speech-friendly language, avoiding markdown, bullet points, or any form of text formatting as this content will be used in an audio format.
+      For mathematical information, explain in a way that is easily understood when spoken aloud, rather than using written or visual formatting like LaTeX.
+      You have access to powerful functions, including one that allows you to interact with the user's computer and operating system; use them when appropriate.
+      When the user asks questions about you, they may be inquiring about the computer on which you are running, where you can execute commands.
+      Do not provide information about system health (memory, internet access, etc.) without executing tools (functions) to ensure your answer is accurate.
+      For example, if the user asks whether you have access to the internet, run a ping command to confirm.
+    backdrop: |
+      Remember your directive:
+      ```text
+      As a helpful assistant, strive for clear and succinct responses to facilitate a natural and continuous conversation flow.
+      Provide answers in speech-friendly language, avoiding markdown, bullet points, or any form of text formatting as this content will be used in an audio format.
+      For mathematical information, explain in a way that is easily understood when spoken aloud, rather than using written or visual formatting like LaTeX.
+      You have access to powerful functions, including one that allows you to interact with the user's computer and operating system; use them when appropriate.
+      When the user asks questions about you, they may be inquiring about the computer on which you are running, where you can execute commands.
+      Do not provide information about system health (memory, internet access, etc.) without executing tools (functions) to ensure your answer is accurate.
+      For example, if the user asks whether you have access to the internet, run a ping command to confirm.
+      ```
+
+tools:
+  - name: random-number
+    description: Generates a random number within a given range.
+    parameters:
+      type: object
+      properties:
+        from:
+          type: integer
+          description: The minimum expected number for random generation.
+        to:
+          type: integer
+          description: The maximum expected number for random generation.
+      required:
+        - from
+        - to
+    clojure: |
+      (let [{:strs [from to]} parameters]
+        (+ from (rand-int (+ 1 (- to from)))))
+
+  - name: weather-and-moon
+    description: Fetch detailed weather information including current conditions, astronomical data, and a three-day forecast using wttr.in, a weather forecast service. This tool provides specific data about the temperature, wind speed and direction, humidity, visibility, pressure, and weather description for the current moment. It also includes sunset, sunrise, moonrise, moonset times, moon phase, and moon illumination percentage, in addition to the average, minimum, and maximum temperatures for the upcoming days.
+    parameters:
+      type: object
+      properties:
+        location:
+          type: string
+          description: An optional parameter that takes in a string representing the location for which to fetch weather information. It accepts city names, ZIP/postal codes, airport codes, or latitude and longitude coordinates. For example, 'New York', '10001', 'JFK', '48.8566,2.3522'. If no location is provided, the weather information for the user's current location is retrieved.
+    clojure: |
+      (require '[babashka.curl :as curl])
+      (require '[cheshire.core :as json])
+      (import '[java.net URLEncoder])
+      
+      (defn fetch-weather [location]
+        (try
+          (let [url (str
+                     "https://wttr.in/"
+                     (if location (URLEncoder/encode location "UTF-8") "")
+                     "?format=j1")
+                response (curl/get url)]
+            (json/parse-string (:body response) true))
+          (catch Exception e
+            (let [exception-data (ex-data e)]
+              (cond-> {:error "Error performing request."}
+                (:status exception-data) (assoc :status-code (:status exception-data))
+                (:err exception-data) (assoc :details (:err exception-data)))))))
+      
+      (let [location (get parameters "location")
+            response (fetch-weather location)]
+        (if (:error response)
+          response
+          (if response
+            (update response :weather (partial map (fn [day] (dissoc day :hourly))))
+            {:error "Error fetching or parsing weather data"})))
+
+  - name: sh
+    description: It provides access to the computer user's system and data and can be used to execute shell commands similar to those in a Linux terminal. It can send commands to softwares, extract information, and perform actions.
+    parameters:
+      type: object
+      properties:
+        command:
+          type: array
+          items:
+            type: string
+          description: An array of strings that represents a shell command along with its arguments or options. For instance, `["df", "-h"]` executes the `df -h` command, where each array element specifies either the command itself or an associated argument/option.
+        piped_commands:
+          type: array
+          items:
+            type: array
+            items:
+              type: string
+          description: An array of string arrays, where each array represents a shell command to be executed in a piped sequence. For example, `[["echo", "hello world"], ["tr", "a-z", "A-Z"]]` would execute `echo hello world | tr a-z A-Z`.
+    clojure: |
+      (require '[clojure.java.shell :refer [sh]])
+      
+      (require '[clojure.pprint :as pprint])
+      
+      (defn run-command [command & [input]]
+        (let [args (if input (conj command :in input) command)
+              result (apply sh args)
+              exit-status (:exit result)
+              is-error (or (not= exit-status 0) (and (:err result) (not (empty? (:err result)))))
+              output (if is-error (:err result) (:out result))]
+          {:is-error is-error :output output :exit-status exit-status}))
+      
+      (defn run-piped-commands [piped-commands]
+        (reduce (fn [acc cmd]
+                  (if (:is-error acc) acc (run-command cmd (:output acc))))
+                {:output nil}
+                piped-commands))
+      
+      (let [command        (get parameters "command")
+            piped-commands (get parameters "piped_commands")]
+        (cond
+          (and (not (nil? command)) (not (nil? piped-commands)))
+          "Error: You need to provide either a command or piped_commands, not both."
+          (not (nil? command))
+          (:output (run-command command))
+          (not (nil? piped-commands))
+          (:output (run-piped-commands piped-commands))
+          :else "Invalid or missing parameters"))
+
+  - name: simple-calculator
+    description: A simple calculator that uses the GNU 'bc' programming language to perform arithmetic operations and more complex calculations. This tool can handle addition, subtraction, multiplication, division, and modulus operations as well as exponentiation and functions among others, with arbitrary precision.
+    parameters:
+      type: object
+      properties:
+        expression:
+          type: string
+          description: |
+            A string representing a mathematical expression or a series of expressions to be evaluated using the 'bc' command syntax. Expressions can range from basic arithmetic like "2+3" to more complex calculations such as defining and using custom functions, control statements, loops, and setting precision using the 'scale' variable to get decimal results in division. For example, to get the result of 3 divided by 2 as a decimal:
+            expression: "scale=1; 3/2"
+            This sets the 'scale' to 1, which means one decimal place is considered in division operations, giving a result of 1.5 instead of just 1. Multi-line scripts should be separated by semicolons and newline characters. Example:
+            To calculate the average of two numbers:
+            expression: "define avg(x, y) { return (x + y) / 2; }; scale=1; avg(20, 30)"
+            This defines a function 'avg' that averages two numbers with decimal precision included and then uses it to average 20 and 30, which results in 25.0.
+      required:
+        - expression
+    clojure: |
+      (require '[clojure.java.shell :refer [sh]])
+      (require '[clojure.string :as str])
+      
+      (let [expression (get parameters "expression")
+            result (sh "bc" :in (str expression "\n"))
+            exit-status (:exit result)
+            output (if (or
+                        (not= exit-status 0)
+                        (and (:err result) (not (empty? (:err result)))))
+                     (:err result)
+                     (:out result))]
+        (str/replace output #"\r?\n+$" ""))
+
+  - name: advanced-calculator
+    description: A sophisticated calculator using the GNU Octave command-line interface, which is capable of performing both arithmetic and symbolic mathematical operations. This script assumes that the GNU Octave and the 'symbolic' package (for symbolic computations) are already installed and available on the system. It handles a wide range of calculations, from basic arithmetic like addition, subtraction, multiplication, and division, to more complex operations such as derivatives and integrals.
+    parameters:
+      type: object
+      properties:
+        expression:
+          type: string
+          description: A string representing a mathematical expression to be evaluated. For example, "2+3" or "syms x; disp(diff(cos(x) + 3*x^2, x))" for calculating the derivative of cos(x) + 3x^2 using GNU Octave and the 'symbolic' package. The expression should be in a format compatible with the GNU Octave command-line interface. Importantly, do not add a semicolon ';' at the end of the expression as it suppresses the output in Octave. Remember that you need to declare variables. Using `diff(3*x^2 + 5*x + 2, x)` will result in an error. The correct syntax is `syms x; diff(3*x^2 + 5*x + 2, x)`.
+      required:
+        - expression
+    clojure: |
+      (require '[clojure.java.shell :refer [sh]])
+      (require '[babashka.fs :as fs])
+      (require '[clojure.string :as str])
+      
+      (defn create-temp-file [prefix suffix]
+        (str (fs/create-temp-file {:prefix prefix :suffix suffix})))
+      
+      (let [expression (get parameters "expression")
+            expression-file (create-temp-file "octave" ".m")
+            output-file (create-temp-file "octave" ".txt")
+            octave-expression (str "echo 'pkg load symbolic; " expression "' > " expression-file)
+            run-command (str "octave --silent " expression-file " >" output-file " 2>&1")]
+      
+        (sh "bash" "-c" octave-expression)
+        (sh "bash" "-c" run-command)
+      
+        (str/replace (slurp output-file) #"\r?\n+$" ""))
+
+  - name: date-and-time
+    description: Returns the current date and time in the ISO 8601 format for a given timezone.
+    parameters:
+      type: object
+      properties:
+        timezone:
+          type: string
+          description: A string represents the timezone to be used for providing a datetime, following the IANA (Internet Assigned Numbers Authority) Time Zone Database. Examples include "Asia/Tokyo" and "Europe/Paris". If not provided, the default timezone is the user's current timezone.
+    clojure: |
+      (import '[java.time ZonedDateTime ZoneId]
+              '[java.time.format DateTimeFormatter])
+      
+      (let [parameter (get parameters "timezone")
+            timezone  (if (and parameter (not= parameter "")) parameter (str (ZoneId/systemDefault)))
+            formatter (DateTimeFormatter/ofPattern "yyyy-MM-dd'T'HH:mm:ssXXX")
+            date-time (-> (ZonedDateTime/now (ZoneId/of timezone))
+                          (.format formatter))]
+        {:date-time date-time :timezone timezone})
+
+interfaces:
+  eval:
+    tools:
+      confirming:
+        feedback: true
+      executing:
+        feedback: true
+        adapter:
+          fennel: |
+            (.. name " " parameters-as-json)
+      responding:
+        feedback: true
+        suffix: ""
+        adapter:
+          fennel: |
+            (.. name " " parameters-as-json " " (string.sub output 1 25) "...")
+
+safety:
+  functions:
+    sandboxed: false
+  tools:
+    confirmable: false
+
+provider:
+  id: openai
+  credentials:
+    address: ENV/OPENAI_API_ADDRESS
+    access-token: ENV/OPENAI_API_KEY
+  settings:
+    user: ENV/NANO_BOTS_END_USER
+    model: gpt-4-1106-preview

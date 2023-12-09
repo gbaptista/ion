@@ -1,0 +1,5 @@
+pvrecorder ~= 1.2.1
+pvporcupine ~= 3.0.1
+pvcobra ~= 2.0.1
+python-dotenv ~= 1.0.0
+PyYAML ~= 6.0.1

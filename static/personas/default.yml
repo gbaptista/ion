@@ -1,0 +1,133 @@
+---
+meta:
+  symbol: 🔮
+  name: Ion
+  author: gbaptista
+  version: 1.0.0
+  license: CC0-1.0
+  description: Ion's default persona.
+
+cartridge-file-path: static/cartridges/default.yml
+
+events:
+  monitor-engine-started:
+    symbol: 🐍
+    message: Monitor Engine started.
+  welcome-message-booted:
+    symbol: 👋
+    message: Welcome to Ion!
+  listening-and-waiting:
+    symbol: 🎧
+    message: Listening and waiting for a wake word.
+    audio: assets/audio/premium-beat/sci-fi-ui/PremiumBeat_0013_cursor_click_11.wav
+    volume: 1.3
+  interaction-interrupted:
+    symbol: 🛑
+    message: Interaction interrupted.
+  awake-and-recording:
+    symbol: 🎙️
+    message: Awake and recording your speech.
+    audio: assets/audio/premium-beat/sci-fi-ui/PremiumBeat_0013_cursor_selection_07.wav
+  recording-follow-up:
+    symbol: 🎙️
+    message: Recording a possible follow-up.
+  audio-stored:
+    symbol: 💾
+    message: Recorded audio temporarily saved to disk.
+    audio: assets/audio/premium-beat/sci-fi-ui/PremiumBeat_0013_cursor_selection_02.wav
+    volume: 0.8
+  audio-discarded:
+    symbol: 🕳️
+    message: Recorded audio was too short.
+    audio: assets/audio/creator-assets/ui/sound-12.mp3
+  no-follow-up-received:
+    symbol: 🕳️
+    message: No follow-up detected.
+    audio: assets/audio/creator-assets/ui/sound-12.mp3
+    volume: 0.5
+  interaction-engine-started:
+    symbol: 💎
+    message: Interaction Engine started.
+  speech-to-text-started:
+    symbol: ✍️
+    message: Converting speech to text.
+    audio: assets/audio/premium-beat/sci-fi-ui/PremiumBeat_0013_cursor_click_01.wav
+  speech-to-text-completed:
+    symbol: 📝
+    message: 'Speech converted to text:'
+    audio: assets/audio/premium-beat/sci-fi-ui/PremiumBeat_0013_cursor_click_01.wav
+  nano-bot-tool-confirming:
+    symbol: 🔎
+    message: Nano Bot awaiting user confirmation in the console.
+    audio: assets/audio/premium-beat/sci-fi-ui/PremiumBeat_0013_cursor_click_24.wav
+  nano-bot-tool-executing:
+    symbol: 🛠️
+    message: 'Nano Bot is executing a tool:'
+    audio: assets/audio/creator-assets/ui/sound-13.mp3
+  nano-bot-tool-responding:
+    symbol: 📦
+    message: 'Nano Bot received a response from a tool:'
+    audio: assets/audio/premium-beat/sci-fi-ui/PremiumBeat_0013_cursor_click_01.wav
+  nano-bot-answer-received:
+    symbol: 📜
+    message: 'Nano Bot answer received:'
+    audio: assets/audio/premium-beat/sci-fi-ui/PremiumBeat_0013_cursor_click_01.wav
+  interaction-completed:
+    symbol: ✨
+    message: Interaction completed.
+    audio: assets/audio/premium-beat/sci-fi-ui/PremiumBeat_0013_cursor_click_11.wav
+    volume: 1.3
+  error-raised:
+    symbol: ❌
+    message: Error raised.
+    audio: assets/audio/premium-beat/sci-fi-ui/PremiumBeat_0013_cursor_click_24.wav
+  audio-recorded:
+    symbol: 🎶
+    message: Audio successfully recorded.
+  speaking-started:
+    symbol: 🔊
+    message: 'Starting to speak:'
+    volume: 0.75
+  interruption-requested:
+    symbol: ✋
+    message: Interruption request detected.
+    audio: assets/audio/creator-assets/ui/sound-12.mp3
+
+voice-engine:
+  settings:
+    maximum-recording-duration:
+      seconds: 30
+    duration-of-silence-to-stop-recording:
+      seconds: 2
+    minimum-recording-duration-to-be-a-valid-input:
+      seconds: 3
+    voice-probability-threshold: 0.5
+  provider:
+    id: picovoice
+    credentials:
+      access-key: ENV/PICOVOICE_ACCESS_KEY
+    settings:
+      porcupine:
+        keywords:
+          - jarvis
+
+speech-to-text:
+  provider:
+    id: openai
+    credentials:
+      address: ENV/OPENAI_API_ADDRESS
+      access-token: ENV/OPENAI_API_KEY
+    settings:
+      model: whisper-1
+
+text-to-speech:
+  settings:
+    fragment-speech: true
+  provider:
+    id: openai
+    credentials:
+      address: ENV/OPENAI_API_ADDRESS
+      access-token: ENV/OPENAI_API_KEY
+    settings:
+      model: tts-1
+      voice: onyx
