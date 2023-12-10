@@ -36,6 +36,7 @@ sudo yum install ruby
 
 sudo gem install bundler
 sudo chown -R $USER /var/lib/gems
+sudo chown -R $USER /usr/local/bin
 
 gem install nano-bots
 
@@ -141,6 +142,7 @@ sudo yum install ruby
 
 sudo gem install bundler
 sudo chown -R $USER /var/lib/gems
+sudo chown -R $USER /usr/local/bin
 ```
 
 Install and set up the [Nano Bots CLI](https://github.com/icebaker/ruby-nano-bots):
