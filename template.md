@@ -60,6 +60,8 @@ nb static/cartridges/default.yml - repl
 # > 🎧 Listening and waiting for a wake word.
 ```
 
+Remember that some [Nano Apps](https://github.com/gbaptista/nano-apps) may have their own dependencies, so check if you have them installed for proper functioning.
+
 ## Index
 
 {index}
@@ -205,6 +207,8 @@ You can use the [wake word](https://en.wikipedia.org/wiki/Keyword_spotting) `Jar
 > 🎶 Audio successfully recorded.
 > 🕳️ No follow-up detected.
 ```
+
+Remember that some [Nano Apps](https://github.com/gbaptista/nano-apps) may have their own dependencies, so check if you have them installed for proper functioning.
 
 ## Personas
 
@@ -509,7 +513,7 @@ source env/bin/activate
 
 Check out [Python on Raspberry Pi](https://www.raspberrypi.com/documentation/computers/os.html#python-on-raspberry-pi).
 
-To display Unicode emojis in the default [LXTerminal](https://github.com/lxde/lxterminal) of Raspberry Pi, you need to install a font that supports Unicode emojis:
+To display Unicode emojis in console terminals on a Raspberry Pi, you need to install a font that supports Unicode emojis:
 
 ```sh
 sudo apt-get install fonts-noto-color-emoji
