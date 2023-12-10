@@ -447,7 +447,7 @@ Accessible description of all possible events:
 > interruption-requested
 ```
 
-**Other Events**
+**Other Events:**
 
 ```
 > error-raised
