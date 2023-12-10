@@ -147,9 +147,8 @@ Install Ruby dependencies:
 sudo bundle install
 ```
 
-> If you are running a Raspberry Pi, check its [specific additional instructions](#raspberry-pi).
-
 Install Python dependencies:
+> If you are running a Raspberry Pi, check its [specific additional instructions](#raspberry-pi).
 ```sh
 pip install -r requirements.txt
 ```
