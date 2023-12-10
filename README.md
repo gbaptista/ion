@@ -539,6 +539,14 @@ source env/bin/activate
 
 Check out [Python on Raspberry Pi](https://www.raspberrypi.com/documentation/computers/os.html#python-on-raspberry-pi).
 
+To display Unicode emojis in the default [LXTerminal](https://github.com/lxde/lxterminal) of Raspberry Pi, you need to install a font that supports Unicode emojis:
+
+```sh
+sudo apt-get install fonts-noto-color-emoji
+```
+
+You need to restart the Raspberry Pi to see the results.
+
 ### Known Pitfalls
 
 If you connect a speaker to your computer using a jack plug, you might experience issues with audio inactivity which can lead to hearing "static noise." On Linux, you can fix this by:
