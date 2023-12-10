@@ -15,6 +15,8 @@ It provides a modern alternative to traditional [virtual assistants](https://en.
 
 ## TL;DR and Quick Start
 
+> If you are running a Raspberry Pi, check its [specific additional instructions](#raspberry-pi).
+
 ```sh
 git clone https://github.com/gbaptista/ion.git
 
@@ -24,27 +26,20 @@ git clone https://github.com/gbaptista/ion-assets.git assets
 
 cp .env.example .env # Fill the environment variables.
 
-sudo pacman -S mpv
-sudo apt-get install mpv
-sudo yum install mpv
+sudo pacman -S mpv # Arch / Manjaro
+sudo apt-get install mpv # Debian / Ubuntu / Raspberry Pi OS
+sudo dnf install mpv # Fedora / CentOS / RHEL
 
 curl -s https://raw.githubusercontent.com/babashka/babashka/master/install | sudo bash
 
-sudo pacman -S ruby
-sudo apt-get install ruby-full
-sudo yum install ruby
+sudo pacman -S ruby # Arch / Manjaro
+sudo apt-get install ruby-full # Debian / Ubuntu / Raspberry Pi OS
+sudo dnf install ruby # Fedora / CentOS / RHEL
 
 sudo gem install bundler
-sudo chown -R $USER /var/lib/gems
-sudo chown -R $USER /usr/local/bin
+sudo gem install nano-bots
 
-gem install nano-bots
-
-bundle install
-
-# Specific for Raspberry Pi: Set Up the Python Virtual Environment
-python3 -m venv env
-source env/bin/activate
+sudo bundle install
 
 pip install -r requirements.txt
 
@@ -90,6 +85,7 @@ nb static/cartridges/default.yml - repl
         - [Normalizing Volumes](#normalizing-volumes)
         - [Special Events](#special-events)
 - [Hardware](#hardware)
+    - [Raspberry Pi](#raspberry-pi)
     - [Known Pitfalls](#known-pitfalls)
 - [Development](#development)
     - [Updating the README](#updating-the-readme)
@@ -110,10 +106,9 @@ Obtain an Access Key for [Picovoice](https://picovoice.ai) by registering at the
 To enable speech and sound cues, you need to be able to play audio files, which requires the installation of [mpv](https://mpv.io):
 
 ```sh
-sudo pacman -S mpv
-sudo apt-get install mpv
-sudo dnf install mpv
-sudo yum install mpv
+sudo pacman -S mpv # Arch / Manjaro
+sudo apt-get install mpv # Debian / Ubuntu / Raspberry Pi OS
+sudo dnf install mpv # Fedora / CentOS / RHEL
 ```
 
 Clone the necessary repositories:
@@ -164,30 +159,24 @@ You need to have [Ruby 3](https://www.ruby-lang.org) (with [RubyGems](https://ru
 
 Install Ruby and Bundler:
 ```sh
-sudo pacman -S ruby
-sudo apt-get install ruby-full
-sudo yum install ruby
+sudo pacman -S ruby # Arch / Manjaro
+sudo apt-get install ruby-full # Debian / Ubuntu / Raspberry Pi OS
+sudo dnf install ruby # Fedora / CentOS / RHEL
 
 sudo gem install bundler
-sudo chown -R $USER /var/lib/gems
-sudo chown -R $USER /usr/local/bin
 ```
 
 Install and set up the [Nano Bots CLI](https://github.com/icebaker/ruby-nano-bots):
 ```sh
-gem install nano-bots
+sudo gem install nano-bots
 ```
 
 Install Ruby dependencies:
 ```sh
-bundle install
+sudo bundle install
 ```
 
-Set up the Python Virtual Environment (specific for [Raspberry Pi](https://www.raspberrypi.com/documentation/computers/os.html#python-on-raspberry-pi))
-```sh
-python3 -m venv env
-source env/bin/activate
-```
+> If you are running a Raspberry Pi, check its [specific additional instructions](#raspberry-pi).
 
 Install Python dependencies:
 ```sh
@@ -539,6 +528,17 @@ events:
 
 Ion performs well using simple headphones and a microphone. For open environments, you may want to consider investing in speakers that will provide the audio experience you are seeking and, specifically, a microphone appropriate for open spaces, such as an omnidirectional one or those designed for conference rooms.
 
+### Raspberry Pi
+
+Before running `pip install -r requirements.txt`, you need to create a Python virtual environment:
+
+```sh
+python3 -m venv env
+source env/bin/activate
+```
+
+Check out [Python on Raspberry Pi](https://www.raspberrypi.com/documentation/computers/os.html#python-on-raspberry-pi).
+
 ### Known Pitfalls
 
 If you connect a speaker to your computer using a jack plug, you might experience issues with audio inactivity which can lead to hearing "static noise." On Linux, you can fix this by:
@@ -565,9 +565,9 @@ bb tasks/generate-readme.clj
 Trick for automatically updating the `README.md` when `template.md` changes:
 
 ```sh
-sudo pacman -S inotify-tools
-sudo apt-get install inotify-tools
-sudo yum install inotify-tools
+sudo pacman -S inotify-tools # Arch / Manjaro
+sudo apt-get install inotify-tools # Debian / Ubuntu / Raspberry Pi OS
+sudo dnf install inotify-tools # Fedora / CentOS / RHEL
 
 while inotifywait -e modify template.md; do bb tasks/generate-readme.clj; done
 ```
