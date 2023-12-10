@@ -4,6 +4,8 @@ import threading
 import time
 import secrets
 
+from dotenv import load_dotenv
+
 from src.python.components.persona import Persona
 from src.python.components.monitor import Monitor
 from src.python.components.recorder import Recorder
@@ -85,6 +87,9 @@ class MainApplication:
 
 def main():
     persona_path = sys.argv[1]
+
+    load_dotenv()
+
     app = MainApplication(persona_path)
     app.run()
 
