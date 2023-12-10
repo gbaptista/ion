@@ -9,7 +9,8 @@ class Monitor:
 
         self.porcupine = pvporcupine.create(
             access_key=provider['credentials']['access-key'],
-            keywords=provider['settings']['porcupine']['keywords'])
+            keywords=provider['settings']['porcupine']['keywords'],
+            sensitivities=provider['settings']['porcupine']['sensitivities'])
         
         self.cobra = pvcobra.create(
             access_key=provider['credentials']['access-key'])

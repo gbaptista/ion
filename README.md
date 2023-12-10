@@ -293,6 +293,9 @@ voice-engine:
         keywords:
           - jarvis
           - alexa
+        sensitivities:
+          - 0.5
+          - 0.5
 ```
 
 You can also create a custom wake word [through their platform](https://picovoice.ai/blog/console-tutorial-custom-wake-word/).

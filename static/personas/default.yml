@@ -110,6 +110,8 @@ voice-engine:
       porcupine:
         keywords:
           - jarvis
+        sensitivities:
+          - 0.5
 
 speech-to-text:
   provider:
