@@ -16,22 +16,33 @@ It provides a modern alternative to traditional [virtual assistants](https://en.
 ## TL;DR and Quick Start
 
 ```sh
-git clone git@github.com:gbaptista/ion.git
+git clone https://github.com/gbaptista/ion.git
 
 cd ion
 
-git clone git@github.com:gbaptista/ion-assets.git assets
+git clone https://github.com/gbaptista/ion-assets.git assets
 
 cp .env.example .env # Fill the environment variables.
 
 sudo pacman -S mpv
 sudo apt-get install mpv
-sudo dnf install mpv
 sudo yum install mpv
 
-curl -s https://raw.githubusercontent.com/babashka/babashka/master/install | bash
+curl -s https://raw.githubusercontent.com/babashka/babashka/master/install | sudo bash
+
+sudo pacman -S ruby
+sudo apt-get install ruby-full
+sudo yum install ruby
+
+sudo gem install bundler
+
+gem install nano-bots
 
 bundle install
+
+# Specific for Raspberry Pi: Set Up the Python Virtual Environment
+python3 -m venv env
+source env/bin/activate
 
 pip install -r requirements.txt
 
@@ -66,11 +77,7 @@ Obtain an Access Key for [Picovoice](https://picovoice.ai) by registering at the
 
 ### Installation
 
-You need to have [Ruby 3](https://www.ruby-lang.org) (with [RubyGems](https://rubygems.org)) and [Python 3](https://www.python.org) (with [PyPI](https://pypi.org)) installed on your system.
-
-Install and set up the [Nano Bots CLI](https://github.com/icebaker/ruby-nano-bots).
-
-Additionally, to enable speech and sound cues, you need to be able to play audio files, which requires the installation of [mpv](https://mpv.io):
+To enable speech and sound cues, you need to be able to play audio files, which requires the installation of [mpv](https://mpv.io):
 
 ```sh
 sudo pacman -S mpv
@@ -82,11 +89,11 @@ sudo yum install mpv
 Clone the necessary repositories:
 
 ```sh
-git clone git@github.com:gbaptista/ion.git
+git clone https://github.com/gbaptista/ion.git
 
 cd ion
 
-git clone git@github.com:gbaptista/ion-assets.git assets
+git clone https://github.com/gbaptista/ion-assets.git assets
 ```
 
 Get the necessary keys from the [Requirements](#services) section and set up your `.env` file:
@@ -120,12 +127,34 @@ export NANO_BOTS_END_USER=your-user
 Install [Babashka](https://babashka.org):
 
 ```sh
-curl -s https://raw.githubusercontent.com/babashka/babashka/master/install | bash
+curl -s https://raw.githubusercontent.com/babashka/babashka/master/install | sudo bash
+```
+
+You need to have [Ruby 3](https://www.ruby-lang.org) (with [RubyGems](https://rubygems.org)) and [Python 3](https://www.python.org) (with [PyPI](https://pypi.org)) installed on your system.
+
+Install Ruby and Bundler:
+```sh
+sudo pacman -S ruby
+sudo apt-get install ruby-full
+sudo yum install ruby
+
+sudo gem install bundler
+```
+
+Install and set up the [Nano Bots CLI](https://github.com/icebaker/ruby-nano-bots):
+```sh
+gem install nano-bots
 ```
 
 Install Ruby dependencies:
 ```sh
 bundle install
+```
+
+Set up the Python Virtual Environment (specific for [Raspberry Pi](https://www.raspberrypi.com/documentation/computers/os.html#python-on-raspberry-pi))
+```sh
+python3 -m venv env
+source env/bin/activate
 ```
 
 Install Python dependencies:
@@ -503,7 +532,6 @@ Trick for automatically updating the `README.md` when `template.md` changes:
 ```sh
 sudo pacman -S inotify-tools
 sudo apt-get install inotify-tools
-sudo dnf install inotify-tools
 sudo yum install inotify-tools
 
 while inotifywait -e modify template.md; do bb tasks/generate-readme.clj; done
