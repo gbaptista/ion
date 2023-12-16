@@ -441,7 +441,7 @@ en-US-Wavenet-J
 
 Check all the available voices in the [official documentation](https://cloud.google.com/text-to-speech/docs/voices).
 
-You may need to add the path to your `google-credentials.json` file to your[environment](#installation).
+You may need to add the path to your `google-credentials.json` file to your [environment](#installation).
 
 Note that Google voices are designed for specific languages (e.g., `pt-BR`, `en-US`), and you need to correctly match the `name` with the `ssml_gender` and `language_code`.
 
