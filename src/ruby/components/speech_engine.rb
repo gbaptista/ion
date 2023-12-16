@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'singleton'
+require 'tempfile'
 
 require './src/ruby/components/providers/aws'
 require './src/ruby/components/providers/openai'

@@ -2,7 +2,7 @@
 
 A [voice user interface](https://en.wikipedia.org/wiki/Voice_user_interface) that enables you to talk with a [Nano Bot](https://spec.nbots.io), aiming to create a [conversational](https://en.wikipedia.org/wiki/Conversational_user_interface) experience.
 
-It provides a modern alternative to traditional [virtual assistants](https://en.wikipedia.org/wiki/Virtual_assistant). It's highly **customizable**, leveraging [Picovoice](https://picovoice.ai); **powerful**, backed by [Nano Bots](https://spec.nbots.io), which are compatible with providers such as [OpenAI's ChatGPT](https://openai.com/chatgpt); and **hackable**, offering support for [Nano Apps](https://github.com/gbaptista/nano-apps) that can be coded in [Lua](https://www.lua.org/about.html), [Fennel](https://fennel-lang.org), or [Clojure](https://clojure.org).
+It provides a modern alternative to traditional [virtual assistants](https://en.wikipedia.org/wiki/Virtual_assistant). It's highly **customizable**, leveraging [Picovoice](https://picovoice.ai); **powerful**, backed by [Nano Bots](https://spec.nbots.io), which are compatible with providers such as [OpenAI ChatGPT](https://openai.com/chatgpt) and [Google Gemini](https://deepmind.google/technologies/gemini); and **hackable**, offering support for [Nano Apps](https://github.com/gbaptista/nano-apps) that can be coded in [Lua](https://www.lua.org/about.html), [Fennel](https://fennel-lang.org), or [Clojure](https://clojure.org).
 
 - [TL;DR and Quick Start](#tldr-and-quick-start)
 - [Documentation](#index)
@@ -99,7 +99,9 @@ Remember that some [Nano Apps](https://github.com/gbaptista/nano-apps) may have 
 
 ### Services
 
-To use Nano Bots with [OpenAI's ChatGPT](https://openai.com/chatgpt), you'll need an API Key, which you can obtain from the [OpenAI Platform](https://platform.openai.com). It is a paid service for which you are [charged based on consumption](https://openai.com/pricing).
+To use Nano Bots with [OpenAI ChatGPT](https://openai.com/chatgpt), you'll need an API Key, which you can obtain from the [OpenAI Platform](https://platform.openai.com). It is a paid service for which you are [charged based on consumption](https://openai.com/pricing).
+
+If you're planning to use Nano Bots with [Google Gemini](https://deepmind.google/technologies/gemini), check [here](https://github.com/gbaptista/gemini-ai#credentials) to learn how to obtain your credentials. It's also a paid service.
 
 Obtain an Access Key for [Picovoice](https://picovoice.ai) by registering at the [Picovoice Console](https://console.picovoice.ai/). It's _Forever-Free_ for _"individuals exploring, experimenting, and evaluating"_, and [paid for other use cases](https://picovoice.ai/pricing/).
 
@@ -129,7 +131,7 @@ Get the necessary keys from the [Requirements](#services) section and set up you
 cp .env.example .env
 ```
 
-Edit the content of the `.env` file to add your keys:
+Edit the content of the `.env` file to add your keys, example:
 ```sh
 PICOVOICE_ACCESS_KEY=your-key
 
@@ -392,8 +394,23 @@ text-to-speech:
   provider:
     id: google
     credentials:
-      project-id: ENV/GOOGLE_PROJECT_ID
+      service: cloud-text-to-speech-api
       file-path: ENV/GOOGLE_CREDENTIALS_FILE_PATH
+    settings:
+      name: pt-BR-Neural2-A
+      ssml_gender: FEMALE
+      language_code: pt-BR
+```
+
+Alternatively, if you are using [_Application Default Credentials_](https://cloud.google.com/docs/authentication/application-default-credentials), you can omit the `file-path`:
+
+```yaml
+---
+text-to-speech:
+  provider:
+    id: google
+    credentials:
+      service: cloud-text-to-speech-api
     settings:
       name: pt-BR-Neural2-A
       ssml_gender: FEMALE
@@ -424,7 +441,7 @@ en-US-Wavenet-J
 
 Check all the available voices in the [official documentation](https://cloud.google.com/text-to-speech/docs/voices).
 
-You need to add your Google Cloud `project-id` and the path to your `google-credentials.json` file to your [environment](#installation).
+You may need to add the path to your `google-credentials.json` file to your[environment](#installation).
 
 Note that Google voices are designed for specific languages (e.g., `pt-BR`, `en-US`), and you need to correctly match the `name` with the `ssml_gender` and `language_code`.
 

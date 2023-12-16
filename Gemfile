@@ -6,7 +6,7 @@ gem 'dotenv', '~> 2.8', '>= 2.8.1'
 
 gem 'ruby-openai', '~> 6.3', '>= 6.3.1'
 
-gem 'nano-bots', '~> 1.1', '>= 1.1.2'
+gem 'nano-bots', '~> 2.1'
 
 gem 'aws-sdk-polly', '~> 1.80'
 gem 'google-cloud-text_to_speech', '~> 1.5'
