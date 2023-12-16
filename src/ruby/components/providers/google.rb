@@ -13,7 +13,7 @@ class GoogleProvider < Provider
 
   def client
     @client ||= Google::Cloud::TextToSpeech.text_to_speech do |config|
-      config.credentials = persona[:credentials][:'file-path']
+      config.credentials = persona[:credentials][:'file-path'] if persona[:credentials].key?(:'file-path')
     end
   end
 
