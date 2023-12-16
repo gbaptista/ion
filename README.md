@@ -92,6 +92,7 @@ Remember that some [Nano Apps](https://github.com/gbaptista/nano-apps) may have 
 - [Development](#development)
     - [Updating the README](#updating-the-readme)
 - [Accessibility](#accessibility)
+- [Version](#version)
 - [Acknowledgments](#acknowledgments)
 - [Disclaimer](#disclaimer)
 
@@ -610,6 +611,10 @@ mlp README.md -p 8076
 ## Accessibility
 
 We are committed to making Ion accessible. If you face any accessibility issues or have recommendations for improvement, please feel free to fill out an [issue](https://github.com/gbaptista/ion/issues)!
+
+## Version
+
+`1.0.0`
 
 ## Acknowledgments
 

@@ -582,6 +582,10 @@ mlp README.md -p 8076
 
 We are committed to making Ion accessible. If you face any accessibility issues or have recommendations for improvement, please feel free to fill out an [issue](https://github.com/gbaptista/ion/issues)!
 
+## Version
+
+`1.0.0`
+
 ## Acknowledgments
 
 I have been trying (and failing) to build this for over a decade, and we finally have all the core pieces of the puzzle to make it possible at the level I envisioned:
