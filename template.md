@@ -584,7 +584,7 @@ We are committed to making Ion accessible. If you face any accessibility issues 
 
 ## Version
 
-`1.0.0`
+`1.1.0`
 
 ## Acknowledgments
 
